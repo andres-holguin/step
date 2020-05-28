@@ -16,8 +16,14 @@
  * Adds a random greeting to the page.
  */
 function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+  const greetings = [
+    'Hello world!',
+    '¡Hola Mundo!',
+    '你好，世界！',
+    'Bonjour le monde!',
+    '\"Whether you think you can or you think you can\'t, you\'re right.\" -Stewie Griffin',
+    '\"What in Oblivion is that?\" -General Tullius'
+  ];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];

@@ -16,8 +16,14 @@
  * Adds a random greeting to the page.
  */
 function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+  const greetings = [
+    'Hello world!',
+    '¡Hola Mundo!',
+    '你好，世界！',
+    'Bonjour le monde!',
+    '\"Whether you think you can or you think you can\'t, you\'re right.\" -Stewie Griffin',
+    '\"What in Oblivion is that?\" -General Tullius'
+  ];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -26,3 +32,21 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+// Fetch header for each page.
+fetch("templates/header.html")
+  .then(response => response.text())
+  .then(text => {
+    let header = document.createElement("header");
+    header.innerHTML = text;
+    document.querySelector("body").before(header);
+  });
+
+// Fetch footer for each page
+fetch("templates/footer.html")
+  .then(response => response.text())
+  .then(text => {
+    let footer = document.createElement("footer");
+    footer.innerHTML = text;
+    document.querySelector("body").after(footer);
+  });

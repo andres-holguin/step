@@ -32,3 +32,21 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+// Fetch header for each page.
+fetch("templates/header.html")
+  .then(response => response.text())
+  .then(text => {
+    let header = document.createElement("header");
+    header.innerHTML = text;
+    document.querySelector("body").before(header);
+  });
+
+// Fetch footer for each page
+fetch("templates/footer.html")
+  .then(response => response.text())
+  .then(text => {
+    let footer = document.createElement("footer");
+    footer.innerHTML = text;
+    document.querySelector("body").after(footer);
+  });

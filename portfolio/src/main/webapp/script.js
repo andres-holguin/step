@@ -32,37 +32,27 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+/**
+ * Loads the HTML retrieved from `path` and inserts it `where` relative to `selector`
+ * Example: loadHTML("templates/header.html", "body", "beforebegin") inserts the header before <body>
+ */
+function loadHTML(path, selector, where) {
+  fetch(path)
+    .then(response => response.text())
+    .then(text => {
+      document.querySelector(selector).insertAdjacentHTML(where, text);
+    });
+}
  
 /**
  * Fetches and loads header and footer content for each page.
  */
-function loadHeadFoot() {
+function onBodyLoad() {
   // Fetch & load header
-  fetch("templates/header.html")
-    .then(response => response.text())
-    .then(text => {
-      let header = document.createElement("header");
-      header.innerHTML = text;
-      document.querySelector("body").before(header);
-    });
-
-  // Fetch & load footer for
-  fetch("templates/footer.html")
-    .then(response => response.text())
-    .then(text => {
-      let footer = document.createElement("footer");
-      footer.innerHTML = text;
-      document.querySelector("body").after(footer);
-    });
-}
-
-/**
- * Fetches greeting from /data and loads it to the start of <body>
- */
-function loadGreeting() {
-  fetch("/data")
-    .then(response => response.text())
-    .then(text => {
-      document.querySelector("body").insertAdjacentHTML("afterbegin", text);
-    });
+  loadHTML("templates/header.html", "body", "beforebegin");
+  // Fetch & load footer
+  loadHTML("templates/footer.html", "body", "afterend");
+  // Fetch & load greeting from /data
+  loadHTML("/data","body", "afterbegin");
 }

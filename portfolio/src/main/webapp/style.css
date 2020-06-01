@@ -1,13 +1,28 @@
+header img {
+  max-block-size: 100px;
+  float: left;
+  margin: 0.5em;
+}
+
 #content {
   margin-left: auto;
   margin-right: auto;
   width: 650px;
 }
 
+body img {
+  block-size: 500px;
+}
+
+.gallery-category img {
+  block-size: 100px;
+}
+
 #greeting-container {
   margin-top: 20px;
 }
 
-img {
-  max-block-size: 100px;
+footer img {
+  height: 20px;
+  padding: 10px;
 }

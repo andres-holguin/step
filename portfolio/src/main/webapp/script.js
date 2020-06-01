@@ -32,21 +32,37 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+ 
+/**
+ * Fetches and loads header and footer content for each page.
+ */
+function loadHeadFoot() {
+  // Fetch & load header
+  fetch("templates/header.html")
+    .then(response => response.text())
+    .then(text => {
+      let header = document.createElement("header");
+      header.innerHTML = text;
+      document.querySelector("body").before(header);
+    });
 
-// Fetch header for each page.
-fetch("templates/header.html")
-  .then(response => response.text())
-  .then(text => {
-    let header = document.createElement("header");
-    header.innerHTML = text;
-    document.querySelector("body").before(header);
-  });
+  // Fetch & load footer for
+  fetch("templates/footer.html")
+    .then(response => response.text())
+    .then(text => {
+      let footer = document.createElement("footer");
+      footer.innerHTML = text;
+      document.querySelector("body").after(footer);
+    });
+}
 
-// Fetch footer for each page
-fetch("templates/footer.html")
-  .then(response => response.text())
-  .then(text => {
-    let footer = document.createElement("footer");
-    footer.innerHTML = text;
-    document.querySelector("body").after(footer);
-  });
+/**
+ * Fetches greeting from /data and loads it to the start of <body>
+ */
+function loadGreeting() {
+  fetch("/data")
+    .then(response => response.text())
+    .then(text => {
+      document.querySelector("body").insertAdjacentHTML("afterbegin", text);
+    });
+}

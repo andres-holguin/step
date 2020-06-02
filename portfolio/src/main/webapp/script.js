@@ -34,14 +34,14 @@ function addRandomGreeting() {
 }
 
 /**
- * Loads the HTML retrieved from `path` and inserts it `where` relative to `selector`
+ * Loads the HTML retrieved from `src` url and inserts it at the `position` relative to `selector`
  * Example: loadHTML("templates/header.html", "body", "beforebegin") inserts the header before <body>
  */
-function loadHTML(path, selector, where) {
-  fetch(path)
+function loadHTML(src, selector, position) {
+  fetch(src)
     .then(response => response.text())
     .then(text => {
-      document.querySelector(selector).insertAdjacentHTML(where, text);
+      document.querySelector(selector).insertAdjacentHTML(position, text);
     });
 }
  

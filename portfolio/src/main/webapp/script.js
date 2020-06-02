@@ -62,5 +62,5 @@ function onBodyLoad() {
   // Fetch & load footer
   loadHTML("templates/footer.html", "body", Adjacent.afterend);
   // Fetch & load greeting from /data
-  loadHTML("/data","body", Adjacent.afterbegin);
+  loadHTML("/data","body", Adjacent.beforeend);
 }

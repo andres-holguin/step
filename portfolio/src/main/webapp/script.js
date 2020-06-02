@@ -33,20 +33,26 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-// Fetch header for each page.
-fetch("templates/header.html")
-  .then(response => response.text())
-  .then(text => {
-    let header = document.createElement("header");
-    header.innerHTML = text;
-    document.querySelector("body").before(header);
-  });
-
-// Fetch footer for each page
-fetch("templates/footer.html")
-  .then(response => response.text())
-  .then(text => {
-    let footer = document.createElement("footer");
-    footer.innerHTML = text;
-    document.querySelector("body").after(footer);
-  });
+/**
+ * Loads the HTML retrieved from `src` url and inserts it at the `position` relative to `selector`
+ * Example: loadHTML("templates/header.html", "body", "beforebegin") inserts the header before <body>
+ */
+function loadHTML(src, selector, position) {
+  fetch(src)
+    .then(response => response.text())
+    .then(text => {
+      document.querySelector(selector).insertAdjacentHTML(position, text);
+    });
+}
+ 
+/**
+ * Fetches and loads header and footer content for each page.
+ */
+function onBodyLoad() {
+  // Fetch & load header
+  loadHTML("templates/header.html", "body", "beforebegin");
+  // Fetch & load footer
+  loadHTML("templates/footer.html", "body", "afterend");
+  // Fetch & load greeting from /data
+  loadHTML("/data","body", "afterbegin");
+}

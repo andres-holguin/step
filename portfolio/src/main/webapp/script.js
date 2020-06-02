@@ -47,10 +47,10 @@ function loadHTML(src, selector, position) {
 
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
 const Adjacent = {
-  beforebegin: "beforebegin",
-  afterbegin: "afterbegin",
-  beforeend: "beforeend",
-  afterend: "afterend"
+  BEFORE_BEGIN: "beforebegin",
+  AFTER_BEGIN: "afterbegin",
+  BEFORE_END: "beforeend",
+  AFTER_END: "afterend"
 };
  
 /**

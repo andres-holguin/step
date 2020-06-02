@@ -44,15 +44,23 @@ function loadHTML(src, selector, position) {
       document.querySelector(selector).insertAdjacentHTML(position, text);
     });
 }
+
+// "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
+const Adjacent = {
+  beforebegin: "beforebegin",
+  afterbegin: "afterbegin",
+  beforeend: "beforeend",
+  afterend: "afterend"
+};
  
 /**
- * Fetches and loads header and footer content for each page.
+ * Fetches and loads header, footer and other dynamic content for each page.
  */
 function onBodyLoad() {
   // Fetch & load header
-  loadHTML("templates/header.html", "body", "beforebegin");
+  loadHTML("templates/header.html", "body", Adjacent.beforebegin);
   // Fetch & load footer
-  loadHTML("templates/footer.html", "body", "afterend");
+  loadHTML("templates/footer.html", "body", Adjacent.afterend);
   // Fetch & load greeting from /data
-  loadHTML("/data","body", "afterbegin");
+  loadHTML("/data","body", Adjacent.afterbegin);
 }

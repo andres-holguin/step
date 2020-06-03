@@ -25,9 +25,11 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.FetchOptions;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
@@ -37,7 +39,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    comments = getComments();
+    comments = getComments(5);
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -52,15 +54,16 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Helper function that returns an Array of strings with all the comments in Datastore
+   * Helper function that returns an Array of strings with numComments of the comments in Datastore.
+   * (TODO: All comments will be loaded if numComments === -1)
    */
-  private ArrayList<String> getComments() {
+  private ArrayList<String> getComments(int numComments) {
     ArrayList<String> comments = new ArrayList<String>();
 
     Query query = new Query("Comment");
-    PreparedQuery results = datastore.prepare(query);
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));
 
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : results) {
       comments.add((String) entity.getProperty("text"));
     }
 

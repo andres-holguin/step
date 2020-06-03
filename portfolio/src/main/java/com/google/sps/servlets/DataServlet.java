@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -30,10 +32,13 @@ import java.util.ArrayList;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private ArrayList<String> comments = new ArrayList<String>(); //TO-DO: Remove once comments can be loaded from Datastore
+  private ArrayList<String> comments;
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    comments = getComments();
+
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(comments));
@@ -46,13 +51,29 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
+  /**
+   * Helper function that returns an Array of strings with all the comments in Datastore
+   */
+  private ArrayList<String> getComments() {
+    ArrayList<String> comments = new ArrayList<String>();
+
+    Query query = new Query("Comment");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      comments.add((String) entity.getProperty("text"));
+    }
+
+    return comments;
+  }
+
+  /**
+   * Helper function to add the text from a new comment to Datastore.
+   */
   private void addNewComment(String commentText) {
-    comments.add(commentText); //TO-DO: Remove once comments can be loaded from Datastore
-    
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", commentText);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
   }
 }

@@ -28,16 +28,17 @@ import java.util.ArrayList;
 public class DataServlet extends HttpServlet {
   private ArrayList<String> comments = new ArrayList<String>();
 
-  public DataServlet() {
-    comments.add("I've always wanted to do this.");
-    comments.add("How can I contact you?");
-    comments.add("There needs to be some improvements here.");
-  }
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Gson gson = new Gson();
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(comments));
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String newComment = request.getParameter("new-comment");
+    comments.add(newComment);
+    response.sendRedirect("/index.html");
   }
 }

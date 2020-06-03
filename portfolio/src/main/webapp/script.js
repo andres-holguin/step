@@ -47,10 +47,10 @@ function loadHTML(src, selector, position) {
 
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
 const Adjacent = {
-  beforebegin: "beforebegin",
-  afterbegin: "afterbegin",
-  beforeend: "beforeend",
-  afterend: "afterend"
+  BEFORE_BEGIN: "beforebegin",
+  AFTER_BEGIN: "afterbegin",
+  BEFORE_END: "beforeend",
+  AFTER_END: "afterend"
 };
  
 /**
@@ -58,9 +58,23 @@ const Adjacent = {
  */
 function onBodyLoad() {
   // Fetch & load header
-  loadHTML("templates/header.html", "body", Adjacent.beforebegin);
+  loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN);
   // Fetch & load footer
-  loadHTML("templates/footer.html", "body", Adjacent.afterend);
-  // Fetch & load greeting from /data
-  loadHTML("/data","body", Adjacent.beforeend);
+  loadHTML("templates/footer.html", "body", Adjacent.AFTER_END);
+  // Fetch & load comments from /data
+  loadComments();
+}
+
+/**
+ * Fetch comments array from the server and load them to the list of comments, if it exists.
+ */
+function loadComments() {
+  fetch("/data").then(response => response.json()).then(comments => {
+    const commentsEl = document.getElementById("comments-list");
+    comments.forEach(comment => {
+      const liElement = document.createElement('li');
+      liElement.innerText = comment;
+      commentsEl?.appendChild(liElement);
+    });
+  });
 }

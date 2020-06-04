@@ -28,6 +28,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.FetchOptions;
 
 import com.google.gson.Gson;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +41,8 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    comments = getComments(5);
+    int numComments = getIntParameter(request, "num-comments");
+    comments = getComments(numComments);
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -51,6 +54,21 @@ public class DataServlet extends HttpServlet {
     String commentText = request.getParameter("comment-text");
     addNewComment(commentText);
     response.sendRedirect("/index.html");
+  }
+
+  /**
+   * Helper function to get and attempt to parse an integer parameter in request's query string.
+   */
+  private int getIntParameter(HttpServletRequest request, String param) {
+    String numberString = request.getParameter(param);
+
+    try {
+      int number = Integer.parseInt(numberString);
+      return number;
+    } catch (Exception e) {
+      System.err.println("Could not convert to int: " + numberString);
+      return -1;
+    }
   }
 
   /**

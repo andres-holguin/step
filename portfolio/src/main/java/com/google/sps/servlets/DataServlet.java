@@ -54,11 +54,13 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Helper function that returns an Array of strings with numComments of the comments in Datastore.
-   * (TODO: All comments will be loaded if numComments === -1)
+   * Helper function that returns an ArrayList of strings 
+   * with `numComments` of the comments in Datastore.
+   * All comments will be loaded if numComments < 0
    */
   private ArrayList<String> getComments(int numComments) {
     ArrayList<String> comments = new ArrayList<String>();
+    if (numComments < 0) numComments = Integer.MAX_VALUE;
 
     Query query = new Query("Comment");
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));

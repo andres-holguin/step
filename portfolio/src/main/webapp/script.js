@@ -69,7 +69,8 @@ function onBodyLoad() {
  * Fetch comments array from the server and load them to the list of comments, if it exists.
  */
 function loadComments() {
-  fetch("/data").then(response => response.json()).then(comments => {
+  let numComments = "3"
+  fetch("/data?num-comments=" + numComments).then(response => response.json()).then(comments => {
     const commentsEl = document.getElementById("comments-list");
     comments.forEach(comment => {
       const liElement = document.createElement('li');

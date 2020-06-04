@@ -78,7 +78,7 @@ public class DataServlet extends HttpServlet {
    */
   private ArrayList<String> getComments(Integer numComments) {
     ArrayList<String> comments = new ArrayList<String>();
-    if (numComments ==  null) numComments = Integer.MAX_VALUE;
+    if (numComments ==  null || numComments < 0) numComments = Integer.MAX_VALUE;
 
     Query query = new Query("Comment");
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));

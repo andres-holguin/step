@@ -41,7 +41,7 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int numComments = getIntParameter(request, "num-comments");
+    Integer numComments = getIntParameter(request, "num-comments");
     comments = getComments(numComments);
 
     Gson gson = new Gson();
@@ -59,7 +59,7 @@ public class DataServlet extends HttpServlet {
   /**
    * Helper function to get and attempt to parse an integer parameter in request's query string.
    */
-  private int getIntParameter(HttpServletRequest request, String param) {
+  private Integer getIntParameter(HttpServletRequest request, String param) {
     String numberString = request.getParameter(param);
 
     try {
@@ -67,7 +67,7 @@ public class DataServlet extends HttpServlet {
       return number;
     } catch (Exception e) {
       System.err.println("Could not convert to int: " + numberString);
-      return -1;
+      return null;
     }
   }
 
@@ -76,9 +76,9 @@ public class DataServlet extends HttpServlet {
    * with `numComments` of the comments in Datastore.
    * All comments will be loaded if numComments < 0
    */
-  private ArrayList<String> getComments(int numComments) {
+  private ArrayList<String> getComments(Integer numComments) {
     ArrayList<String> comments = new ArrayList<String>();
-    if (numComments < 0) numComments = Integer.MAX_VALUE;
+    if (numComments ==  null) numComments = Integer.MAX_VALUE;
 
     Query query = new Query("Comment");
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));

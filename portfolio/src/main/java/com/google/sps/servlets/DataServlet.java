@@ -74,7 +74,7 @@ public class DataServlet extends HttpServlet {
   /**
    * Helper function that returns an ArrayList of strings 
    * with `numComments` of the comments in Datastore.
-   * All comments will be loaded if numComments < 0
+   * All comments will be loaded if numComments < 0 or null.
    */
   private ArrayList<String> getComments(Integer numComments) {
     ArrayList<String> comments = new ArrayList<String>();

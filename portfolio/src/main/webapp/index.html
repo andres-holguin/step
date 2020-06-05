@@ -27,7 +27,8 @@
     </div>
     <div id="comments">
       <label for="num-comments">Number of Comments:</label>
-      <input type="number" name="num-comments" id="num-comments" min="0" value="10"/>
+      <input type="number" name="num-comments" id="num-comments" 
+        min="0" value="10" onchange="loadComments()"/>
 
       <ul id="comments-list"></ul>
 

@@ -71,7 +71,7 @@ function onBodyLoad() {
  */
 function loadComments() {
   clearComments();
-  let numComments = document.getElementById("num-comments")?.getAttribute("value");
+  let numComments = document.getElementById("num-comments")?.value;
 
   fetch("/data?num-comments=" + numComments).then(response => response.json()).then(comments => {
     const commentsEl = document.getElementById("comments-list");
@@ -88,6 +88,5 @@ function loadComments() {
  */
 function clearComments() {
   const commentsEl = document.getElementById("comments-list");
-  if (commentsEl)
-    commentsEl.innerHTML = "";
+  if (commentsEl) commentsEl.innerHTML = "";
 }

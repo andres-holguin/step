@@ -66,10 +66,14 @@ function onBodyLoad() {
 }
 
 /**
- * Fetch comments array from the server and load them to the list of comments, if it exists.
+ * Clear comments, then fetch them from the server and 
+ * load them to the list of comments, if it exists.
  */
 function loadComments() {
-  fetch("/data").then(response => response.json()).then(comments => {
+  clearComments();
+  let numComments = document.getElementById("num-comments")?.value;
+
+  fetch("/data?num-comments=" + numComments).then(response => response.json()).then(comments => {
     const commentsEl = document.getElementById("comments-list");
     comments.forEach(comment => {
       const liElement = document.createElement('li');
@@ -77,4 +81,12 @@ function loadComments() {
       commentsEl?.appendChild(liElement);
     });
   });
+}
+
+/**
+ * Clear comments from comments list.
+ */
+function clearComments() {
+  const commentsEl = document.getElementById("comments-list");
+  if (commentsEl) commentsEl.innerHTML = "";
 }

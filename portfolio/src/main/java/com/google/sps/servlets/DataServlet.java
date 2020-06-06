@@ -25,11 +25,15 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.FetchOptions;
 
 import com.google.gson.Gson;
-import java.util.ArrayList;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/** Servlet that returns some comments content.*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private ArrayList<String> comments;
@@ -37,7 +41,8 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    comments = getComments();
+    Integer numComments = getIntParameter(request, "num-comments");
+    comments = getComments(numComments);
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -52,15 +57,32 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Helper function that returns an Array of strings with all the comments in Datastore
+   * Helper function to get and attempt to parse an integer parameter in request's query string.
    */
-  private ArrayList<String> getComments() {
+  private Integer getIntParameter(HttpServletRequest request, String param) {
+    String numberString = request.getParameter(param);
+
+    try {
+      return Integer.parseInt(numberString);
+    } catch (Exception e) {
+      System.err.println("Could not convert to int: " + numberString);
+      return null;
+    }
+  }
+
+  /**
+   * Helper function that returns an ArrayList of strings 
+   * with `numComments` of the comments in Datastore.
+   * All comments will be loaded if numComments < 0 or null.
+   */
+  private ArrayList<String> getComments(Integer numComments) {
     ArrayList<String> comments = new ArrayList<String>();
+    if (numComments ==  null || numComments < 0) numComments = Integer.MAX_VALUE;
 
     Query query = new Query("Comment");
-    PreparedQuery results = datastore.prepare(query);
+    List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));
 
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : results) {
       comments.add((String) entity.getProperty("text"));
     }
 
@@ -77,3 +99,4 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
   }
 }
+

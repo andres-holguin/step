@@ -24,8 +24,14 @@
       <p>Click here to get a random message:</p>
       <button onclick="addRandomGreeting()">Hello</button>
       <div id="greeting-container"></div>
+    </div>
+    <div id="comments">
+      <label for="num-comments">Number of Comments:</label>
+      <input type="number" name="num-comments" id="num-comments" 
+        min="0" value="10" onchange="loadComments()"/>
 
       <ul id="comments-list"></ul>
+
       <form action="/data" method="POST">
         <textarea name="comment-text" placeholder="Enter a comment"></textarea>
         <input type="submit"/>

@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some comments content.*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private ArrayList<String> comments;
@@ -63,8 +63,7 @@ public class DataServlet extends HttpServlet {
     String numberString = request.getParameter(param);
 
     try {
-      int number = Integer.parseInt(numberString);
-      return number;
+      return Integer.parseInt(numberString);
     } catch (Exception e) {
       System.err.println("Could not convert to int: " + numberString);
       return null;
@@ -100,3 +99,4 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
   }
 }
+

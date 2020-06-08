@@ -25,6 +25,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 
 import com.google.gson.Gson;
@@ -78,7 +79,7 @@ public class DataServlet extends HttpServlet {
     ArrayList<String> comments = new ArrayList<String>();
     if (numComments ==  null || numComments < 0) numComments = Integer.MAX_VALUE;
 
-    Query query = new Query("Comment");
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));
 
     for (Entity entity : results) {
@@ -94,6 +95,7 @@ public class DataServlet extends HttpServlet {
   private void addNewComment(String commentText) {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", commentText);
+    commentEntity.setProperty("timestamp", System.currentTimeMillis());
 
     datastore.put(commentEntity);
   }

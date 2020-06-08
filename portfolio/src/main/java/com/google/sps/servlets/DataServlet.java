@@ -29,7 +29,6 @@ import com.google.appengine.api.datastore.FetchOptions;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,4 +98,3 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
   }
 }
-

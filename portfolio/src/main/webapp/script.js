@@ -83,10 +83,14 @@ function loadComments() {
   });
 }
 
-/**
- * Clear comments from comments list.
- */
+/** Clear comments from comments list. */
 function clearComments() {
   const commentsEl = document.getElementById("comments-list");
   if (commentsEl) commentsEl.innerHTML = "";
+}
+
+/** Delete comments from Datastore, and reload comments */
+function deleteAllComments() {
+  fetch('/delete-data', {method: 'POST'});
+  loadComments();
 }

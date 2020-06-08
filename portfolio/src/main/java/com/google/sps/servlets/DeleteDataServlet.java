@@ -36,7 +36,6 @@ import java.util.List;
 /** Servlet that deletes all comments */
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
-  private ArrayList<String> comments;
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override

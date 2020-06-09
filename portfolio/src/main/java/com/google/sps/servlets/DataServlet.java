@@ -63,7 +63,7 @@ public class DataServlet extends HttpServlet {
     try {
       return Integer.parseInt(numberString);
     } catch (Exception e) {
-      System.err.println("Could not convert to int: " + numberString);
+      System.err.println("Could not convert query search parameter to int: " + numberString);
       return null;
     }
   }

@@ -35,7 +35,8 @@ function addRandomGreeting() {
 
 /**
  * Loads the HTML retrieved from `src` url and inserts it at the `position` relative to `selector`
- * Example: loadHTML("templates/header.html", "body", "beforebegin") inserts the header before <body>
+ * Example: loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN);
+ * inserts the header before <body>
  */
 function loadHTML(src, selector, position) {
   fetch(src)
@@ -44,7 +45,6 @@ function loadHTML(src, selector, position) {
       document.querySelector(selector).insertAdjacentHTML(position, text);
     });
 }
-
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
 const Adjacent = {
   BEFORE_BEGIN: "beforebegin",
@@ -53,16 +53,14 @@ const Adjacent = {
   AFTER_END: "afterend"
 };
  
-/**
- * Fetches and loads header, footer and other dynamic content for each page.
- */
+/** Fetches and loads header, footer and other dynamic content for each page. */
 function onBodyLoad() {
   // Fetch & load header
   loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN);
   // Fetch & load footer
   loadHTML("templates/footer.html", "body", Adjacent.AFTER_END);
-  // Fetch & load comments from /data
-  loadComments();
+  // Fetch & load comments from /data for authenticated users
+  loadUserFeatures();
 }
 
 /**
@@ -93,4 +91,17 @@ function clearComments() {
 function deleteAllComments() {
   fetch('/delete-data', {method: 'POST'});
   loadComments();
+}
+
+function loadUserFeatures() {
+  fetch('/login').then(response => response.json()).then(user => {
+    if (user.isLoggedIn) {
+      loadHTML("templates/comments.html", "#comments", Adjacent.BEFORE_END);
+      loadComments();
+    } else {
+      document.querySelector("#comments").insertAdjacentHTML(Adjacent.BEFORE_END,
+        "<p>Please login to view or post comments.</p>"
+      );
+    }
+  });
 }

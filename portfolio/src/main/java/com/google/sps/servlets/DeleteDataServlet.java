@@ -37,6 +37,7 @@ public class DeleteDataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
+  /** Helper function to query all comments and delete the result */
   private void deleteAllComments() {
     Query query = new Query("Comment");
     PreparedQuery results = datastore.prepare(query);

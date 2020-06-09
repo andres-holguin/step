@@ -56,9 +56,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  /**
-   * Helper function to get and attempt to parse an integer parameter in request's query string.
-   */
+  /** Helper function to get and attempt to parse an integer parameter in request's query string. */
   private Integer getIntParameter(HttpServletRequest request, String param) {
     String numberString = request.getParameter(param);
 
@@ -89,9 +87,7 @@ public class DataServlet extends HttpServlet {
     return comments;
   }
 
-  /**
-   * Helper function to add the text from a new comment to Datastore.
-   */
+  /** Helper function to add the text from a new comment to Datastore. */
   private void addNewComment(String commentText) {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", commentText);

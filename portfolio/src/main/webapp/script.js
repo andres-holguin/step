@@ -35,7 +35,7 @@ function addRandomGreeting() {
 
 /**
  * Loads the HTML retrieved from `src` url and inserts it at the `position` relative to `selector`
- * Example: loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN);
+ * Example: loadHTML("templates/header.html", "body", Adjacent.BEFORE);
  * inserts the header before <body>
  */
 function loadHTML(src, selector, position) {
@@ -47,16 +47,16 @@ function loadHTML(src, selector, position) {
 }
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
 const Adjacent = {
-  BEFORE_BEGIN: "beforebegin",
-  AFTER_BEGIN: "afterbegin",
-  BEFORE_END: "beforeend",
-  AFTER_END: "afterend"
+  BEFORE: "beforebegin",
+  PREPEND: "afterbegin",
+  APPEND: "beforeend",
+  AFTER: "afterend"
 };
  
 /** Fetches and loads header, footer and other dynamic content for each page. */
 function onBodyLoad() {
   // Fetch & load header template
-  loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN)
+  loadHTML("templates/header.html", "body", Adjacent.BEFORE)
   // Fetch & load comments template and data from /data for authenticated users
   // Note: A feature depends on the header being loaded, so it is necessary to await
   // for the header fetch to resolve.
@@ -99,16 +99,16 @@ function deleteAllComments() {
 function loadUserFeatures() {
   fetch('/login').then(response => response.json()).then(user => {
     // Add login link to <nav>
-    document.querySelector("nav")?.insertAdjacentHTML(Adjacent.BEFORE_END,
+    document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
       "<a id=\"login-link\" href=\"" + user.loginUrl + "\">Login/Logout</a>"
     );
 
     // Load comments or notice to log in
     if (user.isLoggedIn) {
-      loadHTML("templates/comments.html", "#comments", Adjacent.BEFORE_END)
+      loadHTML("templates/comments.html", "#comments", Adjacent.APPEND)
         .then(loadComments);
     } else {
-      document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.BEFORE_END,
+      document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.APPEND,
         "<p>Please <a href=\"" + user.loginUrl + "\">login</a> to view or post comments.</p>"
       );
     }

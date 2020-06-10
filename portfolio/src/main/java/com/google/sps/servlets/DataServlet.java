@@ -30,6 +30,9 @@ import com.google.appengine.api.datastore.FetchOptions;
 
 import com.google.gson.Gson;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,7 @@ import java.util.List;
 public class DataServlet extends HttpServlet {
   private ArrayList<String> comments;
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private UserService userService = UserServiceFactory.getUserService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -92,6 +96,7 @@ public class DataServlet extends HttpServlet {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", commentText);
     commentEntity.setProperty("timestamp", System.currentTimeMillis());
+    commentEntity.setProperty("email", userService.getCurrentUser().getEmail());
 
     datastore.put(commentEntity);
   }

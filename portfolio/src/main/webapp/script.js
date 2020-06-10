@@ -39,10 +39,10 @@ function addRandomGreeting() {
  * inserts the header before <body>
  */
 function loadHTML(src, selector, position) {
-  fetch(src)
+  return fetch(src)
     .then(response => response.text())
     .then(text => {
-      document.querySelector(selector).insertAdjacentHTML(position, text);
+      document.querySelector(selector)?.insertAdjacentHTML(position, text);
     });
 }
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
@@ -93,14 +93,17 @@ function deleteAllComments() {
   loadComments();
 }
 
+/** Load content based on whether user is logged in or not */
 function loadUserFeatures() {
   fetch('/login').then(response => response.json()).then(user => {
+
+    // Load comments or notice to log in
     if (user.isLoggedIn) {
-      loadHTML("templates/comments.html", "#comments", Adjacent.BEFORE_END);
-      loadComments();
+      loadHTML("templates/comments.html", "#comments", Adjacent.BEFORE_END)
+        .then(loadComments);
     } else {
-      document.querySelector("#comments").insertAdjacentHTML(Adjacent.BEFORE_END,
-        "<p>Please login to view or post comments.</p>"
+      document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.BEFORE_END,
+        "<p>Please <a href=\"" + user.loginUrl + "\">login</a> to view or post comments.</p>"
       );
     }
   });

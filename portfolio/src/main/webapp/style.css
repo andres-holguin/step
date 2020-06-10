@@ -4,6 +4,11 @@ header img {
   margin: 0.5em;
 }
 
+#login-link {
+  float: right;
+  margin-right: 1em;
+}
+
 #content {
   margin-left: auto;
   margin-right: auto;

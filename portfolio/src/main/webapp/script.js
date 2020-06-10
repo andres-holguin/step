@@ -96,6 +96,10 @@ function deleteAllComments() {
 /** Load content based on whether user is logged in or not */
 function loadUserFeatures() {
   fetch('/login').then(response => response.json()).then(user => {
+    // Add login link to <nav>
+    document.querySelector("nav")?.insertAdjacentHTML(Adjacent.BEFORE_END,
+      "<a id=\"login-link\" href=\"" + user.loginUrl + "\">Login/Logout</a>"
+    );
 
     // Load comments or notice to log in
     if (user.isLoggedIn) {

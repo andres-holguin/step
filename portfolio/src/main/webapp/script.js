@@ -55,12 +55,14 @@ const Adjacent = {
  
 /** Fetches and loads header, footer and other dynamic content for each page. */
 function onBodyLoad() {
-  // Fetch & load header
-  loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN);
-  // Fetch & load footer
+  // Fetch & load header template
+  loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN)
+  // Fetch & load comments template and data from /data for authenticated users
+  // Note: A feature depends on the header being loaded, so it is necessary to await
+  // for the header fetch to resolve.
+    .then(loadUserFeatures);
+  // Fetch & load footer template
   loadHTML("templates/footer.html", "body", Adjacent.AFTER_END);
-  // Fetch & load comments from /data for authenticated users
-  loadUserFeatures();
 }
 
 /**

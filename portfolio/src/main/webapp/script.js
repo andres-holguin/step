@@ -62,7 +62,7 @@ function onBodyLoad() {
   // for the header fetch to resolve.
     .then(loadUserFeatures);
   // Fetch & load footer template
-  loadHTML("templates/footer.html", "body", Adjacent.AFTER_END);
+  loadHTML("templates/footer.html", "body", Adjacent.AFTER);
 }
 
 /**

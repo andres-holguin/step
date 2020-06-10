@@ -91,8 +91,8 @@ function clearComments() {
 
 /** Delete comments from Datastore, and reload comments */
 function deleteAllComments() {
-  fetch('/delete-data', {method: 'POST'});
-  loadComments();
+  fetch('/delete-data', {method: 'POST'})
+    .then(loadComments);
 }
 
 /** Load content based on whether user is logged in or not */

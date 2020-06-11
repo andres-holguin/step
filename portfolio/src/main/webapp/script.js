@@ -43,6 +43,7 @@ function loadHTML(src, selector, position) {
     .then(response => response.text())
     .then(text => {
       document.querySelector(selector)?.insertAdjacentHTML(position, text);
+      console.log(`Loaded ${src} ${position}ing of ${selector}`);
     });
 }
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
@@ -100,7 +101,7 @@ function loadUserFeatures() {
   fetch('/login').then(response => response.json()).then(user => {
     // Add login link to <nav>
     document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
-      "<a id=\"login-link\" href=\"" + user.loginUrl + "\">Login/Logout</a>"
+      `<a id=\"login-link\" href=\"${user.loginUrl}\">Login/Logout</a>`
     );
 
     // Load comments or notice to log in
@@ -109,7 +110,7 @@ function loadUserFeatures() {
         .then(loadComments);
     } else {
       document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.APPEND,
-        "<p>Please <a href=\"" + user.loginUrl + "\">login</a> to view or post comments.</p>"
+        `<p>Please <a href=\"${user.loginUrl}\">login</a> to view or post comments.</p>`
       );
     }
   });

@@ -78,7 +78,7 @@ function loadComments() {
     const commentsEl = document.getElementById("comments-list");
     comments.forEach(comment => {
       const liElement = document.createElement('li');
-      liElement.innerText = comment;
+      liElement.innerText = `${comment.email}: ${comment.text}`;
       commentsEl?.appendChild(liElement);
     });
   });

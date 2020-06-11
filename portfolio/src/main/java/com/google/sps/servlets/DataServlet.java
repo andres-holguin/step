@@ -39,9 +39,20 @@ import java.util.List;
 /** Servlet that returns some comments content.*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private ArrayList<String> comments;
+  private ArrayList<Comment> comments;
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private UserService userService = UserServiceFactory.getUserService();
+
+  private class Comment {
+    String email;
+    String text;
+
+    // Constructor
+    Comment(String email, String text) {
+      this.email = email;
+      this.text = text;
+    }
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,15 +88,17 @@ public class DataServlet extends HttpServlet {
    * with `numComments` of the comments in Datastore.
    * All comments will be loaded if numComments < 0 or null.
    */
-  private ArrayList<String> getComments(Integer numComments) {
-    ArrayList<String> comments = new ArrayList<String>();
+  private ArrayList<Comment> getComments(Integer numComments) {
+    ArrayList<Comment> comments = new ArrayList<>();
     if (numComments ==  null || numComments < 0) numComments = Integer.MAX_VALUE;
 
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numComments));
 
     for (Entity entity : results) {
-      comments.add((String) entity.getProperty("text"));
+      comments.add(new Comment(
+        (String) entity.getProperty("email"), (String) entity.getProperty("text")
+      ));
     }
 
     return comments;

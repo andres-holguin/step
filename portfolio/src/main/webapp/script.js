@@ -35,34 +35,34 @@ function addRandomGreeting() {
 
 /**
  * Loads the HTML retrieved from `src` url and inserts it at the `position` relative to `selector`
- * Example: loadHTML("templates/header.html", "body", "beforebegin") inserts the header before <body>
+ * Example: loadHTML("templates/header.html", "body", Adjacent.BEFORE);
+ * inserts the header before <body>
  */
 function loadHTML(src, selector, position) {
-  fetch(src)
+  return fetch(src)
     .then(response => response.text())
     .then(text => {
-      document.querySelector(selector).insertAdjacentHTML(position, text);
+      document.querySelector(selector)?.insertAdjacentHTML(position, text);
     });
 }
-
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()
 const Adjacent = {
-  BEFORE_BEGIN: "beforebegin",
-  AFTER_BEGIN: "afterbegin",
-  BEFORE_END: "beforeend",
-  AFTER_END: "afterend"
+  BEFORE: "beforebegin",
+  PREPEND: "afterbegin",
+  APPEND: "beforeend",
+  AFTER: "afterend"
 };
  
-/**
- * Fetches and loads header, footer and other dynamic content for each page.
- */
+/** Fetches and loads header, footer and other dynamic content for each page. */
 function onBodyLoad() {
-  // Fetch & load header
-  loadHTML("templates/header.html", "body", Adjacent.BEFORE_BEGIN);
-  // Fetch & load footer
-  loadHTML("templates/footer.html", "body", Adjacent.AFTER_END);
-  // Fetch & load comments from /data
-  loadComments();
+  // Fetch & load header template
+  loadHTML("templates/header.html", "body", Adjacent.BEFORE)
+  // Fetch & load comments template and data from /data for authenticated users
+  // Note: A feature depends on the header being loaded, so it is necessary to await
+  // for the header fetch to resolve.
+    .then(loadUserFeatures);
+  // Fetch & load footer template
+  loadHTML("templates/footer.html", "body", Adjacent.AFTER);
 }
 
 /**
@@ -93,4 +93,24 @@ function clearComments() {
 function deleteAllComments() {
   fetch('/delete-data', {method: 'POST'});
   loadComments();
+}
+
+/** Load content based on whether user is logged in or not */
+function loadUserFeatures() {
+  fetch('/login').then(response => response.json()).then(user => {
+    // Add login link to <nav>
+    document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
+      "<a id=\"login-link\" href=\"" + user.loginUrl + "\">Login/Logout</a>"
+    );
+
+    // Load comments or notice to log in
+    if (user.isLoggedIn) {
+      loadHTML("templates/comments.html", "#comments", Adjacent.APPEND)
+        .then(loadComments);
+    } else {
+      document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.APPEND,
+        "<p>Please <a href=\"" + user.loginUrl + "\">login</a> to view or post comments.</p>"
+      );
+    }
+  });
 }

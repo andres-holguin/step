@@ -43,13 +43,8 @@ public class LoginServlet extends HttpServlet {
     String redirectUrl = "/index.html";
 
     user.isLoggedIn = userService.isUserLoggedIn();
-    if (user.isLoggedIn) {
-      user.loginUrl = null;
-      user.logoutUrl = userService.createLogoutURL(redirectUrl);
-    } else {
-      user.loginUrl = userService.createLoginURL(redirectUrl);
-      user.logoutUrl = null;
-    }
+    user.loginUrl = userService.createLoginURL(redirectUrl);
+    user.logoutUrl = userService.createLogoutURL(redirectUrl);
 
     Gson gson = new Gson();
     response.setContentType("application/json;");

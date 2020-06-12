@@ -43,7 +43,6 @@ function loadHTML(src, selector, position) {
     .then(response => response.text())
     .then(text => {
       document.querySelector(selector)?.insertAdjacentHTML(position, text);
-      console.log(`Loaded ${src} ${position}ing of ${selector}`);
     });
 }
 // "Enum" for key positions used in insertAdjacentHTML() and loadHTML()

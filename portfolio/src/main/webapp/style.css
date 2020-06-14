@@ -20,7 +20,18 @@ body img {
 }
 
 .gallery-category img {
-  block-size: 100px;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  padding: 0.2em;
+}
+
+.gallery-category img:hover {
+  border: black solid 1px;
+}
+
+.hidden {
+  display: none;
 }
 
 #greeting-container {

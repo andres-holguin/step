@@ -65,16 +65,17 @@ public class GalleryImagesServlet extends HttpServlet {
 
     // Get the message entered by the user.
     String message = request.getParameter("message");
-
     // Get the URL of the image that the user uploaded to Blobstore.
     String imageUrl = getUploadedFileUrl(request, "image");
+
+    // Store image link and data in Datastore
     storeGalleryImage(imageUrl);
 
     response.sendRedirect("/gallery.html");
   }  
 
   /**
-   * Helper function that returns an ArrayList of strings 
+   * Helper function that loads the class's ArrayList 
    * with `numComments` of the comments in Datastore.
    * All comments will be loaded if numComments < 0 or null.
    */
@@ -127,7 +128,7 @@ public class GalleryImagesServlet extends HttpServlet {
     }
   }
 
-  /** */
+  /** Stores the image data in Datastore for later retrieval */
   private void storeGalleryImage(String url) {
     Entity GalleryImageEntity = new Entity("GalleryImage");
     GalleryImageEntity.setProperty("url", url);

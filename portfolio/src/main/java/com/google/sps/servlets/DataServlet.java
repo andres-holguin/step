@@ -84,8 +84,8 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Helper function that loads a fresh copy of the
-   * `numComments` most recent comments in Datastore.
+   * Helper function that loads the class's ArrayList
+   * with `numComments` most recent comments in Datastore.
    * All comments will be loaded if numComments < 0 or null.
    */
   private void loadStoredComments(Integer numComments) {

@@ -115,7 +115,7 @@ function loadUserFeatures() {
 }
 
 /** Load the features and text that depend on the user being logged in. */
-function loadLoggedInFeatures(w) {
+function loadLoggedInFeatures() {
   // Insert Logout link to <header>
   document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
     `<a id="login-link" href="${user.logoutUrl}">Logout</a>`

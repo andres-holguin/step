@@ -65,6 +65,7 @@ public class GalleryImagesServlet extends HttpServlet {
 
     // Get the message entered by the user.
     String message = request.getParameter("message");
+
     // Get the URL of the image that the user uploaded to Blobstore.
     String imageUrl = getUploadedFileUrl(request, "image");
 
@@ -76,8 +77,7 @@ public class GalleryImagesServlet extends HttpServlet {
 
   /**
    * Helper function that loads the class's ArrayList 
-   * with `numComments` of the comments in Datastore.
-   * All comments will be loaded if numComments < 0 or null.
+   * with all of the ImageData stored in Datastore
    */
   private void loadStoredGalleryImages() {
     images.clear();

@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Object that holds user data, once loaded.
+let user;
+
 /**
  * Adds a random greeting to the page.
  */
@@ -63,6 +66,8 @@ function onBodyLoad() {
     .then(loadUserFeatures);
   // Fetch & load footer template
   loadHTML("templates/footer.html", "body", Adjacent.AFTER);
+  // Load the gallery. Nothing will happen if a gallery element is not on the page.
+  loadGallery();
 }
 
 /**
@@ -70,11 +75,13 @@ function onBodyLoad() {
  * load them to the list of comments, if it exists.
  */
 function loadComments() {
+  const commentsEl = document.getElementById("comments-list");
+  if (!commentsEl) return; // Short-circuit if no comments element.
+
   clearComments();
   let numComments = document.getElementById("num-comments")?.value;
 
-  fetch("/data?num-comments=" + numComments).then(response => response.json()).then(comments => {
-    const commentsEl = document.getElementById("comments-list");
+  fetch(`/data?num-comments=${numComments}`).then(response => response.json()).then(comments => {
     comments.forEach(comment => {
       const liElement = document.createElement('li');
       liElement.innerText = `${comment.email}: ${comment.text}`;
@@ -97,20 +104,62 @@ function deleteAllComments() {
 
 /** Load content based on whether user is logged in or not */
 function loadUserFeatures() {
-  fetch('/login').then(response => response.json()).then(user => {
-    // Add login link to <nav>
-    document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
-      `<a id=\"login-link\" href=\"${user.loginUrl}\">Login/Logout</a>`
-    );
-
-    // Load comments or notice to log in
+  fetch('/login').then(response => response.json()).then(userData => {
+    user = userData;
     if (user.isLoggedIn) {
-      loadHTML("templates/comments.html", "#comments", Adjacent.APPEND)
-        .then(loadComments);
+      loadLoggedInFeatures();
     } else {
-      document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.APPEND,
-        `<p>Please <a href=\"${user.loginUrl}\">login</a> to view or post comments.</p>`
-      );
+      loadLoggedOutFeatures();
     }
+  });
+}
+
+/** Load the features and text that depend on the user being logged in. */
+function loadLoggedInFeatures(w) {
+  // Insert Logout link to <header>
+  document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
+    `<a id="login-link" href="${user.logoutUrl}">Logout</a>`
+  );
+  // Load comments template
+  loadHTML("templates/comments.html", "#comments", Adjacent.APPEND)
+    .then(loadComments);
+}
+
+/** Load the features and text that depend on the user being logged out. */
+function loadLoggedOutFeatures() {
+  // Insert Login link to <header>
+  document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
+    `<a id="login-link" href="${user.loginUrl}">Login</a>`
+  );
+  // Notify to login for comments
+  document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.APPEND,
+    `<p>Please <a href="${user.loginUrl}">login</a> to view or post comments.</p>`
+  );
+}
+
+/**
+ * Fetch the Url for a new image upload, which is then forwarded to /gallery-image for storage.
+ * Once url is obtained, the image upload form is revealed. */
+function fetchBlobstoreUrlAndShowForm() {
+  fetch('/blobstore-upload-url')
+    .then((response) => response.text())
+    .then((imageUploadUrl) => {
+      const messageForm = document.getElementById('image-upload-form');
+      messageForm.action = imageUploadUrl;
+      messageForm.classList.remove('hidden');
+    });
+}
+ /** Fetch the urls for all uploaded gallery images, and load them to the gallery component. */
+function loadGallery() {
+  const galleryEl = document.getElementById("gallery");
+  if (!galleryEl) return; // Short-circuit if no gallery element
+
+  fetch("/gallery-images").then(response => response.json()).then(galleryImages => {
+    galleryImages.forEach(image => {
+      const aElement = document.createElement('a');
+      aElement.href = image;
+      aElement.innerHTML = `<img src="${image}">`
+      galleryEl.appendChild(aElement);
+    });
   });
 }

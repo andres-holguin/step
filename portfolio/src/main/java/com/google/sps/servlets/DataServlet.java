@@ -39,7 +39,7 @@ import java.util.List;
 /** Servlet that returns some comments content.*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private ArrayList<Comment> comments;
+  private ArrayList<Comment> comments = new ArrayList<>();
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private UserService userService = UserServiceFactory.getUserService();
 
@@ -57,7 +57,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Integer numComments = getIntParameter(request, "num-comments");
-    comments = getComments(numComments);
+    loadStoredComments(numComments);
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
@@ -67,7 +67,7 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String commentText = request.getParameter("comment-text");
-    addNewComment(commentText);
+    storeComment(commentText);
     response.sendRedirect("/index.html");
   }
 
@@ -84,12 +84,12 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Helper function that returns an ArrayList of strings 
-   * with `numComments` of the comments in Datastore.
+   * Loads the class's ArrayList with specified number
+   * (`numComments`) most recent `Comments` in Datastore.
    * All comments will be loaded if numComments < 0 or null.
    */
-  private ArrayList<Comment> getComments(Integer numComments) {
-    ArrayList<Comment> comments = new ArrayList<>();
+  private void loadStoredComments(Integer numComments) {
+    comments.clear();
     if (numComments ==  null || numComments < 0) numComments = Integer.MAX_VALUE;
 
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
@@ -97,15 +97,14 @@ public class DataServlet extends HttpServlet {
 
     for (Entity entity : results) {
       comments.add(new Comment(
-        (String) entity.getProperty("email"), (String) entity.getProperty("text")
+        (String) entity.getProperty("email"), 
+        (String) entity.getProperty("text")
       ));
     }
-
-    return comments;
   }
 
   /** Helper function to add the text from a new comment to Datastore. */
-  private void addNewComment(String commentText) {
+  private void storeComment(String commentText) {
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", commentText);
     commentEntity.setProperty("timestamp", System.currentTimeMillis());

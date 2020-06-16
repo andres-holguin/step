@@ -77,7 +77,7 @@ public class GalleryImagesServlet extends HttpServlet {
 
   /**
    * Helper function that loads the class's ArrayList 
-   * with all of the ImageData stored in Datastore
+   * with all of the image data (`ImageData`) stored in Datastore
    */
   private void loadStoredGalleryImages() {
     images.clear();

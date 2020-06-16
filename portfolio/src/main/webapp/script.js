@@ -77,7 +77,7 @@ function loadComments() {
     const commentsEl = document.getElementById("comments-list");
     comments.forEach(comment => {
       const liElement = document.createElement('li');
-      liElement.innerText = comment;
+      liElement.innerText = `${comment.email}: ${comment.text}`;
       commentsEl?.appendChild(liElement);
     });
   });
@@ -91,8 +91,8 @@ function clearComments() {
 
 /** Delete comments from Datastore, and reload comments */
 function deleteAllComments() {
-  fetch('/delete-data', {method: 'POST'});
-  loadComments();
+  fetch('/delete-data', {method: 'POST'})
+    .then(loadComments);
 }
 
 /** Load content based on whether user is logged in or not */
@@ -100,7 +100,7 @@ function loadUserFeatures() {
   fetch('/login').then(response => response.json()).then(user => {
     // Add login link to <nav>
     document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
-      "<a id=\"login-link\" href=\"" + user.loginUrl + "\">Login/Logout</a>"
+      `<a id=\"login-link\" href=\"${user.loginUrl}\">Login/Logout</a>`
     );
 
     // Load comments or notice to log in
@@ -109,7 +109,7 @@ function loadUserFeatures() {
         .then(loadComments);
     } else {
       document.querySelector("#comments")?.insertAdjacentHTML(Adjacent.APPEND,
-        "<p>Please <a href=\"" + user.loginUrl + "\">login</a> to view or post comments.</p>"
+        `<p>Please <a href=\"${user.loginUrl}\">login</a> to view or post comments.</p>`
       );
     }
   });

@@ -67,7 +67,9 @@ function onBodyLoad() {
   // Fetch & load footer template
   loadHTML("templates/footer.html", "body", Adjacent.AFTER);
   // Load the gallery. Nothing will happen if a gallery element is not on the page.
-  loadGallery();
+  if (document.getElementById("gallery")) {
+    loadGallery();
+  }
 }
 
 /**
@@ -75,10 +77,8 @@ function onBodyLoad() {
  * load them to the list of comments, if it exists.
  */
 function loadComments() {
-  const commentsEl = document.getElementById("comments-list");
-  if (!commentsEl) return; // Short-circuit if no comments element.
-
   clearComments();
+  const commentsEl = document.getElementById("comments-list");
   let numComments = document.getElementById("num-comments")?.value;
 
   fetch(`/data?num-comments=${numComments}`).then(response => response.json()).then(comments => {
@@ -120,9 +120,11 @@ function loadLoggedInFeatures() {
   document.querySelector("nav")?.insertAdjacentHTML(Adjacent.APPEND,
     `<a id="login-link" href="${user.logoutUrl}">Logout</a>`
   );
-  // Load comments template
-  loadHTML("templates/comments.html", "#comments", Adjacent.APPEND)
-    .then(loadComments);
+  // Load comments template if `<div id="comments"> exists.
+  if (document.getElementById("comments")) {
+    loadHTML("templates/comments.html", "#comments", Adjacent.APPEND)
+      .then(loadComments);
+  }
 }
 
 /** Load the features and text that depend on the user being logged out. */
@@ -152,7 +154,6 @@ function fetchBlobstoreUrlAndShowForm() {
  /** Fetch the urls for all uploaded gallery images, and load them to the gallery component. */
 function loadGallery() {
   const galleryEl = document.getElementById("gallery");
-  if (!galleryEl) return; // Short-circuit if no gallery element
 
   fetch("/gallery-images").then(response => response.json()).then(galleryImages => {
     galleryImages.forEach(image => {

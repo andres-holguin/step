@@ -4,18 +4,27 @@
     <meta charset="UTF-8">
     <title>Andres's Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
   </head>
   <body onload="onBodyLoad()">
     <div id="content">
-      <div class="gallery-category">
-        <h1>Sample Images</h1>
-        <img src="images/selfies/profile.jpg" />
-        <img src="images/selfies/profile.jpg" />
-        <img src="images/selfies/profile.jpg" />
-        <img src="images/selfies/profile.jpg" />
-        <img src="images/selfies/profile.jpg" />
+      <div id="gallery">
+        <div class="gallery-category">
+          <h1>Sample Images</h1>
+        </div>
       </div>
     </div>
+
+    <button onclick="fetchBlobstoreUrlAndShowForm()">Upload an image</button>
+    <form id="image-upload-form"
+      class="hidden" method="POST" enctype="multipart/form-data">
+      <p>Type some text:</p>
+      <textarea name="message"></textarea>
+      <br/>
+      <p>Upload an image:</p>
+      <input type="file" name="image">
+      <br/><br/>
+      <button>Submit</button>
+    </form>
   </body>
 </html>

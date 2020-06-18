@@ -19,8 +19,19 @@ body img {
   block-size: 500px;
 }
 
-.gallery-category img {
-  block-size: 100px;
+#gallery img {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  padding: 0.2em;
+}
+
+#gallery img:hover {
+  border: black solid 1px;
+}
+
+.hidden {
+  display: none;
 }
 
 #greeting-container {

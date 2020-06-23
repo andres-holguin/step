@@ -39,10 +39,19 @@ public final class FindMeetingQuery {
     boolean[] availableMinutesWithOptionalAttendees = new boolean[MINUTES_IN_DAY + 1];
     Arrays.fill(availableMinutesWithOptionalAttendees, true);
 
+    // Initialize some consts that will be used on iterations
+    Collection<String> requiredAttendees = request.getAttendees();
+    Collection<String> optionalAttendees = request.getOptionalAttendees();
+
+    // Treat optional attendees as required if there are no required attendees
+    if (requiredAttendees.isEmpty()) {
+      requiredAttendees = optionalAttendees;
+      optionalAttendees = Collections.emptySet();
+    }
     
     // For each event with matching attending, remove respective available minutes
     for (Event event : events) {
-      if (!Collections.disjoint(event.getAttendees(), request.getAttendees())) {
+      if (!Collections.disjoint(event.getAttendees(), requiredAttendees)) {
         // If the event and request attendees have an overlap (not disjoint),
         // Someone in the meeting request has another event, so remove those available minutes
         TimeRange eventTime = event.getWhen();
@@ -51,13 +60,12 @@ public final class FindMeetingQuery {
           availableMinutesWithOptionalAttendees[i] = false;
         }
       }
-      if (!Collections.disjoint(event.getAttendees(), request.getOptionalAttendees())) {
+
+      if (!Collections.disjoint(event.getAttendees(), optionalAttendees)) {
         // Same as above, but only considers optional attendees.
         TimeRange eventTime = event.getWhen();
         for (int i = eventTime.start(); i < eventTime.end(); i++) {
           availableMinutesWithOptionalAttendees[i] = false;
-          // If there are no mandatory attendees, optional attendees should be treated as mandatory.
-          if (request.getAttendees().isEmpty()) availableMinutes[i] = false;
         }
       }      
     }
